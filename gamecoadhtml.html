@@ -9,10 +9,19 @@ canvas {
 }
 </style>
 </head>
-<body onload="startGame()">
+<body onload="startGame()"> <a href="https://dallask8888.github.io/website/">Visit my gethub!</a>
 <script>
-        alert("This game is still in beta testing. If you experience any bugs please let me know.");
+    
+    
+    
+    
+    
+    var str = "Hello World!";
+var enc = window.btoa(str);
+var dec = window.atob(enc);
 
+var res = "Encoded String: " + enc + "<br>" + "Decoded String: " + dec;
+    alert("This game is still in beta testing. If you experience any bugs please let me know.");
     
 
 var myObstacle;
@@ -31,8 +40,8 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
+        this.canvas.width = 1350;
+        this.canvas.height = 540;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -61,6 +70,7 @@ function component(width, height, color, x, y, type) {
     this.y = y;
     this.gravity = 0;
     this.gravitySpeed = 0;
+    this.bounce = 0.6;
     this.update = function() {
         ctx = myGameArea.context;
         if (this.type == "text") {
@@ -68,6 +78,7 @@ function component(width, height, color, x, y, type) {
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
         } else {
+	    ctx = myGameArea.context;
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
@@ -82,7 +93,8 @@ function component(width, height, color, x, y, type) {
         var rockbottom = myGameArea.canvas.height - this.height;
         if (this.y > rockbottom) {
             this.y = rockbottom;
-            this.gravitySpeed = 0;
+          this.gravitySpeed = -(this.gravitySpeed * this.bounce);
+	    
         }
     }
     this.crashWith = function(otherobj) {
@@ -106,6 +118,7 @@ function updateGameArea() {
 if (myGamePiece.crashWith(myObstacle)) {
     myGameArea.stop();
   } else { 
+      
  myGameArea.frameNo += 1;
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
@@ -113,7 +126,12 @@ if (myGamePiece.crashWith(myObstacle)) {
     if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }
     if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }
     if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }
-    if (myGameArea.keys && myGameArea.keys[32]) {setInterval(updateGameArea, 20); }
+    if (myGameArea.keys && myGameArea.keys[32]) {function accelerate(n) {
+    if (!myGameArea.interval) {myGameArea.interval = setInterval(updateGameArea, 20);}
+
+    myGamePiece.gravity = n;
+    
+} }
     myGameArea.clear();
     myObstacle.update();
     myScore.text="SCORE: " + myGameArea.frameNo;
@@ -131,9 +149,12 @@ function accelerate(n) {
     if (!myGameArea.interval) {myGameArea.interval = setInterval(updateGameArea, 20);}
 
     myGamePiece.gravity = n;
+    
 }
+    
 </script>
 <br>
 <button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)">ACCELERATE</button>
 </body>
+
 </html>

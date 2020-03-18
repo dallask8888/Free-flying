@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head>    <link rel="icon" href="http://bit.ly/2IN6EXf" type="image/png">     
+
+    
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
 <style>
 canvas {
     border:1px solid #d3d3d3;
@@ -10,38 +14,51 @@ canvas {
 </style>
 </head>
 <body onload="startGame()"> <a href="https://dallask8888.github.io/website/">Visit my gethub!</a>
-<script>
+    
+    <script>
+
     
     
     
-    
-    
+   
+
     var str = "Hello World!";
 var enc = window.btoa(str);
 var dec = window.atob(enc);
 
-var res = "Encoded String: " + enc + "<br>" + "Decoded String: " + dec;
-    alert("This game is still in beta testing. If you experience any bugs please let me know.");
+//var res = "Encoded String: " + enc + "<br>" + "Decoded String: " + dec;
+    //alert("This game is still in beta testing. If you experience any bugs please let me know.");
     
 
-var myObstacle;
+    
+    
+    
+    
+
 var myGamePiece;
+var myBackground;
+var myObstacle2;    
+var myObstacle;
 var myObstacles = [];
 var myScore;
 
 function startGame() {
-    myObstacle = new component(4, 540, "green", 1, 1);
-    myGamePiece = new component(10, 10, "red", 10, 520);
-    myGamePiece.gravity = 0.05;
+    
+       myBackground = new component(1284, 610, "3.png", 0, 0, "image");
+    myGamePiece = new component(40, 40, "player.png", 44, 730, "image");
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+    myObstacle2 = new component(4, 99, "black", 500, 44);
+    myObstacle = new component(8, 66, "black", 444, 22);
+    
+
     myGameArea.start();
 }
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 1350;
-        this.canvas.height = 540;
+        this.canvas.width = 1284;
+        this.canvas.height = 610;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -59,8 +76,13 @@ window.addEventListener('keydown', function (e) {
     }
 }
 
+
 function component(width, height, color, x, y, type) {
     this.type = type;
+    if (type == "image") {
+    this.image = new Image();
+    this.image.src = color;
+  }
     this.score = 0;
     this.width = width;
     this.height = height;
@@ -78,17 +100,36 @@ function component(width, height, color, x, y, type) {
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
         } else {
+            if (type == "image") {
+      ctx.drawImage(this.image,
+        this.x,
+        this.y,
+        this.width, this.height);
+    } else {
 	    ctx = myGameArea.context;
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
         }
+    }
     }
     this.newPos = function() {
         this.gravitySpeed += this.gravity;
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
         this.hitBottom();
+        this.hitRight();
     }
+
+    this.hitRight = function() {
+    var rockright = myGameArea.canvas.width - this.width;
+    if (this.x > rockright) {
+      this.x = rockright;
+        
+    }
+  }
+    
+    
+    
     this.hitBottom = function() {
         var rockbottom = myGameArea.canvas.height - this.height;
         if (this.y > rockbottom) {
@@ -114,37 +155,45 @@ function component(width, height, color, x, y, type) {
     }
 }
 
+        
+        
+  
+    
 function updateGameArea() { 
-if (myGamePiece.crashWith(myObstacle)) {
-    myGameArea.stop();
-  } else { 
-      
- myGameArea.frameNo += 1;
+if (myGamePiece.crashWith(myObstacle2)) { myGameArea.stop();
+                                             
+                                        
+                                        } else {
+ 
+    myGameArea.frameNo += 1;                        
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
-    if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1; }
-    if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1; }
-    if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1; }
-    if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1; }
-    if (myGameArea.keys && myGameArea.keys[32]) {function accelerate(n) {
-    if (!myGameArea.interval) {myGameArea.interval = setInterval(updateGameArea, 20);}
+    if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -3; }
+    if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 3; }
+    if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -3; }
+    if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 3; }
+    //if (myGameArea.keys && myGameArea.keys[32]) {onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)"; }
 
-    myGamePiece.gravity = n;
+                                            
     
-} }
     myGameArea.clear();
+    myObstacle2.update();
     myObstacle.update();
+    myBackground.update();
     myScore.text="SCORE: " + myGameArea.frameNo;
     myScore.update();
     myGamePiece.newPos();
     myGamePiece.update();
-}
+    
+                                        }
 }
 function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
     return false;
 }
 
+    
+    
 function accelerate(n) {
     if (!myGameArea.interval) {myGameArea.interval = setInterval(updateGameArea, 20);}
 
@@ -158,3 +207,8 @@ function accelerate(n) {
 </body>
 
 </html>
+
+
+
+
+

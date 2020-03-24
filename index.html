@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    
 <head> <script> //<link rel="icon" href="http://bit.ly/2IN6EXf" type="image/png">     
 
     
@@ -42,7 +43,7 @@ var myMusic;
 var myGunLay;
 
 function startGame() {
-    
+
        
     
     myScore = new component("30px", "Consolas", "grey", 280, 40, "text");
@@ -52,9 +53,8 @@ function startGame() {
     myGunLay = new component(50, 50, "gun1-logo.png", 777, 333, "image");
     myPlayer = new component(25, 60, "0left.png", 642, 333, "image");
     mySound1 = new sound("death.mp3");
-    myMusic = new sound("mus.wav");
+    myMusic = new sound("back.mp3");
     myMusic.play();
-    
     myGameArea.start();
 }
 
@@ -236,6 +236,7 @@ if (myPlayer.crashWith(myObstacle))
                  
 //------------------------------------this works-----------------------------------------\\
      myGameArea.clear();
+    myMusic.play();
 
     myGameArea.frameNo += 1;                        
     myPlayer.speedX = 0;
